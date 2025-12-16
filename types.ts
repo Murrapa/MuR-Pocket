@@ -124,7 +124,7 @@ export interface MarketListing {
   price: number;
 }
 
-export type ScreenState = 'AUTH' | 'LOADING' | 'HOME' | 'DECK' | 'SHOP' | 'BATTLE' | 'FORGE' | 'CLANS' | 'LEADERBOARD' | 'PASS' | 'ADMIN' | 'CUSTOMIZE';
+export type ScreenState = 'SPLASH' | 'AUTH' | 'LOADING' | 'HOME' | 'DECK' | 'SHOP' | 'BATTLE' | 'FORGE' | 'CLANS' | 'LEADERBOARD' | 'PASS' | 'ADMIN' | 'CUSTOMIZE';
 
 export interface ArenaLevel {
   id: number;

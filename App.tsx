@@ -785,7 +785,7 @@ const BattleScreen = ({ playerDeck, onExit, allCards, arenaLevel, profile, isFri
 
 // --- Main App Component ---
 const App = () => {
-    const [screen, setScreen] = useState<ScreenState>('HOME');
+    const [screen, setScreen] = useState<ScreenState>('SPLASH'); // START AT SPLASH
     const [profile, setProfile] = useState<PlayerProfile>({
         username: 'AshKetchum',
         level: 5,
@@ -816,6 +816,16 @@ const App = () => {
     // STATE FOR INSPECTION
     const [inspectingCard, setInspectingCard] = useState<CardData | null>(null);
     const handleInspect = (card: CardData) => setInspectingCard(card);
+
+    // --- SPLASH SCREEN TIMER ---
+    useEffect(() => {
+        if (screen === 'SPLASH') {
+            const timer = setTimeout(() => {
+                setScreen('HOME');
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [screen]);
 
     const handleOpenPack = (isEpic: boolean) => {
         const price = isEpic ? 200 : 100;
@@ -906,6 +916,26 @@ const App = () => {
 
     const renderScreen = () => {
         switch (screen) {
+            case 'SPLASH':
+                return (
+                    <div className="flex flex-col items-center justify-center h-full bg-black animate-in fade-in duration-1000 relative overflow-hidden">
+                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900 via-black to-black opacity-50"></div>
+                         <div className="z-10 flex flex-col items-center">
+                             <div className="w-24 h-24 mb-6 rounded-3xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center shadow-[0_0_50px_rgba(139,92,246,0.5)] animate-pulse-slow">
+                                 <Swords size={48} className="text-white" />
+                             </div>
+                             <h1 className="text-6xl font-black text-white tracking-tighter mb-2 drop-shadow-[0_0_10px_white]">MuR</h1>
+                             <p className="text-blue-400 font-bold tracking-[0.5em] text-xs uppercase animate-pulse">Pocket TCG</p>
+                             
+                             <div className="mt-12 w-48 h-1 bg-slate-800 rounded-full overflow-hidden">
+                                 <div className="h-full bg-blue-500 animate-[loading_2s_ease-in-out_infinite]" style={{width: '100%'}}></div>
+                             </div>
+                         </div>
+                         <div className="absolute bottom-8 text-[10px] text-slate-600 font-bold uppercase tracking-widest">
+                             Powered by Gemini AI
+                         </div>
+                    </div>
+                );
             case 'HOME':
                 return (
                     <div className="flex flex-col items-center justify-center h-full space-y-6 relative z-10 animate-in fade-in">
@@ -1036,7 +1066,8 @@ const App = () => {
             <BackgroundParticles />
             
             {/* Top Bar (Global) */}
-            <div className="absolute top-0 left-0 w-full h-14 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 z-50 flex items-center justify-between px-4 shadow-lg">
+            {screen !== 'SPLASH' && (
+            <div className="absolute top-0 left-0 w-full h-14 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 z-50 flex items-center justify-between px-4 shadow-lg animate-in slide-in-from-top duration-500">
                  <div className="flex items-center gap-2" onClick={() => setShowCustomize(true)}>
                      <div className="relative cursor-pointer hover:scale-105 transition-transform group">
                          <div className={`w-9 h-9 rounded border-2 overflow-hidden shadow-lg ${COSMETICS[profile.equippedAvatarFrame]?.value.replace('border-', 'border-') || 'border-slate-500'}`}>
@@ -1063,9 +1094,10 @@ const App = () => {
                      </div>
                  </div>
             </div>
+            )}
 
             {/* Main Content Area */}
-            <div className="w-full h-full pt-14 pb-0 relative z-0">
+            <div className={`w-full h-full ${screen === 'SPLASH' ? 'pt-0' : 'pt-14'} pb-0 relative z-0`}>
                 {renderScreen()}
             </div>
 
