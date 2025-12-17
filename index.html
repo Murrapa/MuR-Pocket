@@ -3,12 +3,27 @@
 <html lang="es" class="dark">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#0f172a" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>Pocket Battle</title>
-    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- SEO para Google -->
+    <title>Pocket Battle: MuR - Juego de Cartas NFT & RPG</title>
+    <meta name="description" content="Juega a Pocket Battle: MuR. Un juego de cartas coleccionables (TCG) con batallas estratégicas, forja de cartas con IA y economía Crypto Cwallet. ¡Juega y gana recompensas!" />
+    <meta name="keywords" content="TCG, Juego de Cartas, NFT, Crypto Game, Cwallet, Batalla, Pokemon Clone, RPG, Anime, React App" />
+    <meta name="author" content="Pocket Battle Team" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Pocket Battle: MuR - Web3 Card Game" />
+    <meta property="og:description" content="Colecciona, lucha y gana en este colorido juego de cartas RPG." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=1000&auto=format&fit=crop" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Pocket Battle: MuR" />
+    <meta property="twitter:description" content="Colecciona, lucha y gana en este colorido juego de cartas RPG." />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -30,13 +45,17 @@
               'float-particle': 'floatParticle 5s infinite linear',
               'glitch': 'glitch 1s linear infinite',
               'shimmer': 'shimmer 2.5s infinite linear',
+              'lunge-up': 'lungeUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+              'lunge-down': 'lungeDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+              'damage-pop': 'damagePop 0.8s ease-out forwards',
+              'slash': 'slashAnim 0.3s ease-out forwards',
             },
             keyframes: {
               shake: {
-                '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
-                '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
-                '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
-                '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                '10%, 90%': { transform: 'translate3d(-2px, 0, 0)' },
+                '20%, 80%': { transform: 'translate3d(4px, 0, 0)' },
+                '30%, 50%, 70%': { transform: 'translate3d(-8px, 0, 0)' },
+                '40%, 60%': { transform: 'translate3d(8px, 0, 0)' }
               },
               floatUp: {
                 '0%': { transform: 'translateY(0) scale(1)', opacity: '1' },
@@ -61,196 +80,50 @@
               shimmer: {
                 '0%': { backgroundPosition: '-200% center' },
                 '100%': { backgroundPosition: '200% center' }
+              },
+              lungeUp: {
+                '0%': { transform: 'translateY(0) scale(1)' },
+                '50%': { transform: 'translateY(-150px) scale(1.2)' },
+                '100%': { transform: 'translateY(0) scale(1)' }
+              },
+              lungeDown: {
+                '0%': { transform: 'translateY(0) scale(1)' },
+                '50%': { transform: 'translateY(150px) scale(1.2)' },
+                '100%': { transform: 'translateY(0) scale(1)' }
+              },
+              damagePop: {
+                '0%': { transform: 'scale(0.5) translateY(0)', opacity: '0' },
+                '20%': { transform: 'scale(1.5) translateY(-20px)', opacity: '1' },
+                '100%': { transform: 'scale(1) translateY(-60px)', opacity: '0' }
+              },
+              slashAnim: {
+                '0%': { width: '0%', opacity: '0.5' },
+                '50%': { width: '100%', opacity: '1' },
+                '100%': { width: '100%', opacity: '0' }
               }
             }
           }
         }
       }
     </script>
-    <style>
-      /* Custom scrollbar */
-      ::-webkit-scrollbar {
-        width: 0px;
-        background: transparent;
-      }
-      body {
-        background-color: #020617; /* Dark Mode Background */
-        color: #f1f5f9;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        overscroll-behavior-y: none; /* Prevents pull-to-refresh on mobile */
-      }
-      
-      /* Card Holo Effect */
-      .holo-shine {
-        background: linear-gradient(135deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 70%);
-        background-size: 200% 200%;
-        animation: holo 3s infinite linear;
-      }
-      @keyframes holo {
-        0% { background-position: 0% 0%; }
-        100% { background-position: 200% 200%; }
-      }
-
-      /* Battle 3D Board - YGO Style */
-      .perspective-field {
-        perspective: 1200px;
-        transform-style: preserve-3d;
-      }
-      
-      .field-grid {
-        transform: rotateX(40deg) scale(0.9);
-        transform-style: preserve-3d;
-      }
-
-      .monster-slot {
-        background: rgba(0,0,0,0.3);
-        border: 2px solid rgba(255,255,255,0.1);
-        box-shadow: 0 0 10px rgba(0,0,0,0.5) inset;
-        transition: all 0.3s ease;
-      }
-      .monster-slot:hover {
-        border-color: rgba(59,130,246,0.5);
-        background: rgba(59,130,246,0.1);
-        box-shadow: 0 0 15px rgba(59,130,246,0.3) inset;
-      }
-
-      /* Battle 3D Animations - THE SUMMON EFFECT */
-      .card-3d-summon {
-        animation: summonImpact 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        transform-style: preserve-3d;
-        transform-origin: center bottom;
-        box-shadow: 0 30px 40px rgba(0,0,0,0.6);
-      }
-
-      @keyframes summonImpact {
-        0% { 
-          opacity: 0; 
-          transform: translateY(-600px) rotateX(45deg) scale(1.5); /* Cae desde el cielo */
-        }
-        60% {
-          opacity: 1;
-          transform: translateY(10px) rotateX(0deg) scale(0.95); /* Impacto y aplastamiento ligero */
-        }
-        80% {
-          transform: translateY(-5px) rotateX(0deg) scale(1.02); /* Pequeño rebote */
-        }
-        100% { 
-          opacity: 1; 
-          transform: translateY(0) rotateX(0deg) scale(1); /* Posición final */
-        }
-      }
-
-      /* Onda de choque al invocar */
-      .summon-shockwave {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotateX(90deg);
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(59,130,246,0) 70%);
-        border: 2px solid rgba(100, 200, 255, 0.8);
-        opacity: 0;
-        animation: shockwaveExpand 0.6s ease-out 0.3s forwards; /* Retraso para coincidir con el impacto */
-        pointer-events: none;
-        z-index: 5;
-      }
-
-      @keyframes shockwaveExpand {
-        0% { width: 10px; height: 10px; opacity: 1; border-width: 5px; }
-        100% { width: 300px; height: 300px; opacity: 0; border-width: 0px; }
-      }
-
-      /* Attack Animations */
-      .attack-anim {
-        position: absolute;
-        z-index: 50;
-        pointer-events: none;
-        animation: flyHit 0.6s ease-in-out forwards;
-      }
-      @keyframes flyHit {
-        0% { transform: scale(0.5); opacity: 0; }
-        50% { transform: scale(1.5); opacity: 1; }
-        100% { transform: scale(2); opacity: 0; }
-      }
-
-      /* Foil Pack Styles */
-      .foil-texture {
-        background-image: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.3) 25%, transparent 30%, transparent 45%, rgba(255, 255, 255, 0.3) 50%, transparent 55%);
-        background-size: 200% 200%;
-        animation: shimmer 3s infinite linear;
-      }
-      @keyframes shimmer {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-      }
-
-      /* Battle Pass Gradients */
-      .battle-pass-track {
-        background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
-        box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
-      }
-      .premium-glow {
-        box-shadow: 0 0 15px rgba(234, 179, 8, 0.3);
-      }
-
-      /* 3D Transform Utilities for Card Flip */
-      .perspective-container {
-        perspective: 1000px;
-      }
-      .transform-style-3d {
-        transform-style: preserve-3d;
-      }
-      .backface-hidden {
-        backface-visibility: hidden;
-      }
-      .rotate-y-180 {
-        transform: rotateY(180deg);
-      }
-      
-      /* Glitch Title Effect */
-      .glitch-text {
-         position: relative;
-      }
-      .glitch-text::before,
-      .glitch-text::after {
-        content: attr(data-text);
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
-      .glitch-text::before {
-        left: 2px;
-        text-shadow: -1px 0 red;
-        clip: rect(44px, 450px, 56px, 0);
-        animation: glitch 5s infinite linear alternate-reverse;
-      }
-      .glitch-text::after {
-        left: -2px;
-        text-shadow: -1px 0 blue;
-        clip: rect(44px, 450px, 56px, 0);
-        animation: glitch 5s infinite linear alternate-reverse;
-      }
-    </style>
-    <script type="importmap">
-    {
-      "imports": {
-        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-        "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
-        "react/": "https://esm.sh/react@^19.2.3/",
-        "react": "https://esm.sh/react@^19.2.3",
-        "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
-        "uuid": "https://esm.sh/uuid@^13.0.0"
-      }
-    }
-    </script>
-  </head>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "uuid": "https://esm.sh/uuid@^13.0.0"
+  }
+}
+</script>
+</head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
+    

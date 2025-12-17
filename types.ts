@@ -1,21 +1,21 @@
 
 export enum Rarity {
-  COMMON = 'COMUN',
-  RARE = 'RARA',
-  EPIC = 'EPICA',
-  LEGENDARY = 'LEGENDARIA',
-  DIVINE = 'MITICA', 
+  COMMON = 'COMMON',
+  RARE = 'RARE',
+  EPIC = 'EPIC',
+  LEGENDARY = 'LEGENDARY',
+  DIVINE = 'DIVINE'
 }
 
 export enum ElementType {
   NORMAL = 'NORMAL',
-  FIRE = 'FUEGO',
-  WATER = 'AGUA',
-  GRASS = 'PLANTA',
-  ELECTRIC = 'ELECTRICO',
-  PSYCHIC = 'PSIQUICO',
-  DARK = 'OSCURIDAD',
-  LIGHT = 'LUZ',
+  FIRE = 'FIRE',
+  WATER = 'WATER',
+  GRASS = 'GRASS',
+  ELECTRIC = 'ELECTRIC',
+  PSYCHIC = 'PSYCHIC',
+  DARK = 'DARK',
+  LIGHT = 'LIGHT',
   DRAGON = 'DRAGON'
 }
 
@@ -23,28 +23,45 @@ export interface CardStats {
   attack: number;
   health: number;
   cost: number;
-  magic: number;   // Nueva estadística
-  defense: number; // Nueva estadística
+  magic: number;
+  defense: number;
+  speed?: 'SLOW' | 'NORMAL' | 'FAST';
 }
 
 export interface CardData {
   id: string;
+  arenaId?: number;
   name: string;
   description: string;
   rarity: Rarity;
   element: ElementType;
   stats: CardStats;
-  imageUrl: string;
   abilityName: string;
-  arenaId: number; // Para desbloquear por arena
+  imageUrl: string;
+}
+
+export interface ArenaLevel {
+  id: number;
+  name: string;
+  bgGradient: string;
+  minRankPoints: number;
 }
 
 export interface Cosmetic {
   id: string;
   type: 'ARENA_SKIN' | 'AVATAR_FRAME' | 'BANNER' | 'AVATAR';
   name: string;
-  value: string; // CSS class or Image URL
-  rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
+  value: string;
+  rarity: string;
+}
+
+export interface BattlePassReward {
+  level: number;
+  freeType: string;
+  freeValue: number | string;
+  premiumType: string;
+  premiumValue: number | string;
+  premiumLabel?: string;
 }
 
 export interface PlayerProfile {
@@ -53,30 +70,28 @@ export interface PlayerProfile {
   xp: number;
   rankPoints: number;
   gold: number;
-  gems: number; 
-  murCoins: number; 
+  gems: number;
+  murCoins: number;
   collection: CardData[];
-  deck: string[]; 
-  
-  // Clan
-  clanId?: string;
-  clanName?: string;
-  
-  // Forge Subscription
-  unlockedForge: boolean; 
-  labSubscriptionExpiry?: number; 
-
-  // Battle Pass
+  deck: string[];
+  unlockedForge: boolean;
   hasPremiumPass: boolean;
   passLevel: number;
-  claimedRewards: number[]; 
-
-  // Cosmetics
+  claimedRewards: number[];
   ownedCosmetics: string[];
-  equippedArenaSkin: string; 
-  equippedAvatarFrame: string; 
+  equippedArenaSkin: string;
+  equippedAvatarFrame: string;
   equippedBanner: string;
   equippedAvatar: string;
+  walletAddress?: string;
+  walletType?: string;
+}
+
+export interface MarketListing {
+  id: string;
+  sellerName: string;
+  card: CardData;
+  price: number;
 }
 
 export interface Clan {
@@ -97,47 +112,24 @@ export interface ClanChatMessage {
   isSystem?: boolean;
 }
 
+export type ScreenState = 'SPLASH' | 'HOME' | 'DECK' | 'SHOP' | 'FORGE' | 'CLANS' | 'LEADERBOARD' | 'PASS' | 'BATTLE';
+
 export interface BattleEntity {
-  instanceId: string;
+  id: string; 
   cardId: string;
   currentHealth: number;
-  maxHealth: number;
   owner: 'PLAYER' | 'ENEMY';
-  laneIndex: number;
-  canAttack: boolean;
-  attackAnim?: string;
-  mode: 'ATTACK' | 'DEFENSE';
+  position: number;
 }
 
 export interface DamageEvent {
-  id: string;
-  value: number;
-  x: number;
-  y: number;
-  isPlayer: boolean;
+    targetId: string;
+    amount: number;
+    isCritical: boolean;
 }
 
-export interface MarketListing {
-  id: string;
-  sellerName: string;
-  card: CardData;
-  price: number;
-}
-
-export type ScreenState = 'SPLASH' | 'AUTH' | 'LOADING' | 'HOME' | 'DECK' | 'SHOP' | 'BATTLE' | 'FORGE' | 'CLANS' | 'LEADERBOARD' | 'PASS' | 'ADMIN' | 'CUSTOMIZE';
-
-export interface ArenaLevel {
-  id: number;
-  name: string;
-  bgGradient: string;
-  minRankPoints: number;
-}
-
-export interface BattlePassReward {
-  level: number;
-  freeType: 'GOLD' | 'GEMS' | 'CARD';
-  freeValue: number | string; 
-  premiumType: 'GOLD' | 'GEMS' | 'COSMETIC' | 'CARD';
-  premiumValue: number | string; 
-  premiumLabel?: string;
+export interface VisualEffect {
+    id: string;
+    type: 'ATTACK' | 'SPELL' | 'DEATH';
+    targetId: string;
 }
