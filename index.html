@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" class="dark">
   <head>
@@ -7,23 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#0f172a" />
     
-    <!-- SEO para Google -->
     <title>Pocket Battle: MuR - Juego de Cartas NFT & RPG</title>
-    <meta name="description" content="Juega a Pocket Battle: MuR. Un juego de cartas coleccionables (TCG) con batallas estratégicas, forja de cartas con IA y economía Crypto Cwallet. ¡Juega y gana recompensas!" />
-    <meta name="keywords" content="TCG, Juego de Cartas, NFT, Crypto Game, Cwallet, Batalla, Pokemon Clone, RPG, Anime, React App" />
-    <meta name="author" content="Pocket Battle Team" />
+    <meta name="description" content="Juega a Pocket Battle: MuR. Un juego de cartas coleccionables (TCG) con batallas estratégicas." />
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Pocket Battle: MuR - Web3 Card Game" />
-    <meta property="og:description" content="Colecciona, lucha y gana en este colorido juego de cartas RPG." />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=1000&auto=format&fit=crop" />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="Pocket Battle: MuR" />
-    <meta property="twitter:description" content="Colecciona, lucha y gana en este colorido juego de cartas RPG." />
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -31,75 +16,25 @@
         theme: {
           extend: {
             colors: {
-              slate: {
-                850: '#1e293b',
-                900: '#0f172a',
-                950: '#020617',
-              }
+              slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' }
             },
             animation: {
               'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
               'float-up': 'floatUp 1s ease-out forwards',
-              'flash': 'flash 0.5s ease-out forwards',
-              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               'float-particle': 'floatParticle 5s infinite linear',
-              'glitch': 'glitch 1s linear infinite',
-              'shimmer': 'shimmer 2.5s infinite linear',
-              'lunge-up': 'lungeUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-              'lunge-down': 'lungeDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-              'damage-pop': 'damagePop 0.8s ease-out forwards',
-              'slash': 'slashAnim 0.3s ease-out forwards',
             },
             keyframes: {
               shake: {
                 '10%, 90%': { transform: 'translate3d(-2px, 0, 0)' },
-                '20%, 80%': { transform: 'translate3d(4px, 0, 0)' },
-                '30%, 50%, 70%': { transform: 'translate3d(-8px, 0, 0)' },
-                '40%, 60%': { transform: 'translate3d(8px, 0, 0)' }
+                '20%, 80%': { transform: 'translate3d(4px, 0, 0)' }
               },
               floatUp: {
                 '0%': { transform: 'translateY(0) scale(1)', opacity: '1' },
                 '100%': { transform: 'translateY(-40px) scale(1.5)', opacity: '0' }
               },
-              flash: {
-                '0%': { opacity: '0' },
-                '50%': { opacity: '1' },
-                '100%': { opacity: '0' }
-              },
               floatParticle: {
                 '0%': { transform: 'translateY(100vh) rotate(0deg)', opacity: '0' },
-                '20%': { opacity: '0.5' },
-                '80%': { opacity: '0.5' },
                 '100%': { transform: 'translateY(-20vh) rotate(360deg)', opacity: '0' }
-              },
-              glitch: {
-                '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
-                '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
-                '62%': { transform: 'translate(0,0) skew(5deg)' },
-              },
-              shimmer: {
-                '0%': { backgroundPosition: '-200% center' },
-                '100%': { backgroundPosition: '200% center' }
-              },
-              lungeUp: {
-                '0%': { transform: 'translateY(0) scale(1)' },
-                '50%': { transform: 'translateY(-150px) scale(1.2)' },
-                '100%': { transform: 'translateY(0) scale(1)' }
-              },
-              lungeDown: {
-                '0%': { transform: 'translateY(0) scale(1)' },
-                '50%': { transform: 'translateY(150px) scale(1.2)' },
-                '100%': { transform: 'translateY(0) scale(1)' }
-              },
-              damagePop: {
-                '0%': { transform: 'scale(0.5) translateY(0)', opacity: '0' },
-                '20%': { transform: 'scale(1.5) translateY(-20px)', opacity: '1' },
-                '100%': { transform: 'scale(1) translateY(-60px)', opacity: '0' }
-              },
-              slashAnim: {
-                '0%': { width: '0%', opacity: '0.5' },
-                '50%': { width: '100%', opacity: '1' },
-                '100%': { width: '100%', opacity: '0' }
               }
             }
           }
@@ -109,14 +44,14 @@
   <script type="importmap">
 {
   "imports": {
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
-    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "uuid": "https://esm.sh/uuid@^13.0.0",
     "vite": "https://esm.sh/vite@^7.3.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
-    "uuid": "https://esm.sh/uuid@^13.0.0"
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
@@ -126,4 +61,3 @@
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
-    

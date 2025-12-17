@@ -1,4 +1,5 @@
 
+
 export enum Rarity {
   COMMON = 'COMMON',
   RARE = 'RARE',
@@ -112,7 +113,7 @@ export interface ClanChatMessage {
   isSystem?: boolean;
 }
 
-export type ScreenState = 'SPLASH' | 'HOME' | 'DECK' | 'SHOP' | 'FORGE' | 'CLANS' | 'LEADERBOARD' | 'PASS' | 'BATTLE';
+export type ScreenState = 'SPLASH' | 'HOME' | 'DECK' | 'SHOP' | 'FORGE' | 'CLANS' | 'LEADERBOARD' | 'PASS' | 'BATTLE' | 'PUZZLE';
 
 export interface BattleEntity {
   id: string; 
