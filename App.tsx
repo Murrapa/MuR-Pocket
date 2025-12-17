@@ -4,10 +4,11 @@ import { ALL_CARDS, INITIAL_CARDS, MAX_MANA, LANE_COUNT, ARENAS, ELEMENT_ICONS, 
 import { Card } from './components/Card';
 import { generateCardFromPrompt } from './services/gemini';
 import { Coins, Gem, Zap, Swords, User, Shield, Trophy, Users, Star, Gift, ArrowRight, Lock, LogOut, Disc, Search, ShoppingBag, Crown, Palette, Hexagon, DollarSign, Store, Layers, Gamepad2, Flag, Image as ImageIcon, Trash2, PlusCircle, CheckCircle, Skull, Heart, X, CreditCard, Calendar, MessageSquare, Globe, LogIn, Activity, Flame, Infinity, Clock, PlayCircle, Tag, LockOpen, Wallet, QrCode, ArrowUpRight, Mail, Bitcoin, Link as LinkIcon, Power, Monitor, Smartphone, ChevronDown, RefreshCw, Copy, Timer, Puzzle, Repeat, ArrowLeftRight, Tv, Video, TrendingUp, Medal } from 'lucide-react';
+import { connectInjectedWallet, depositUSDT, getUSDTBalance } from './src/web3';
 import { v4 as uuidv4 } from 'uuid';
 
 const simpleId = () => Math.random().toString(36).substr(2, 9);
-const TREASURY_ADDRESS = "0x4ebd9cd06bdf2d8ee736c6ad58c0c11563f7600c";
+const TREASURY_ADDRESS = (import.meta as any).env?.VITE_CWALLET_USDT_ADDRESS || "0x4ebd9cd06bdf2d8ee736c6ad58c0c11563f7600c";
 
 // --- Component: Background Particles ---
 const BackgroundParticles = () => {
@@ -228,15 +229,38 @@ const CwalletPaymentModal = ({ request, onClose }: { request: { amount: number, 
                             <p className="text-[10px] text-center text-slate-500">
                                 Envía exactamente <span className="text-white font-bold">{request.amount} {request.currency}</span> a esta dirección.
                             </p>
+                            <div className="grid grid-cols-2 gap-2 mt-3">
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      const { signer, address } = await connectInjectedWallet();
+                                      const bal = await getUSDTBalance(signer, address);
+                                      const dec = bal.decimals;
+                                      const needed = (window as any).BigInt(parseInt((request.amount * Math.pow(10, dec)).toString()));
+                                      if (bal.raw < needed) {
+                                        throw new Error('Saldo USDT insuficiente');
+                                      }
+                                      await depositUSDT(signer, TREASURY_ADDRESS, request.amount);
+                                      setStep(2);
+                                    } catch (e: any) {
+                                      alert(e?.message || 'Error al procesar el pago');
+                                    }
+                                  }}
+                                  className="w-full py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white font-bold text-sm"
+                                >
+                                  Pagar con Wallet
+                                </button>
+                                <button
+                                  onClick={handleVerify}
+                                  disabled={verifying}
+                                  className={`w-full py-2 rounded-lg font-bold text-sm ${verifying ? 'bg-slate-700 text-slate-500' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                                >
+                                  Ya pagué
+                                </button>
+                            </div>
                         </div>
 
-                        <button 
-                            onClick={handleVerify} 
-                            disabled={verifying}
-                            className={`w-full py-4 rounded-xl font-bold uppercase transition-all flex items-center justify-center gap-2 ${verifying ? 'bg-slate-700 text-slate-500' : 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20'}`}
-                        >
-                            {verifying ? <RefreshCw className="animate-spin"/> : 'He realizado el pago'}
-                        </button>
+                        
                     </>
                 ) : (
                     <div className="text-center py-8 animate-in zoom-in">
@@ -1274,7 +1298,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500/30 overflow-x-hidden flex flex-col">
+    <div className="h-[100dvh] bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500/30 overflow-hidden flex flex-col">
       <BackgroundParticles />
       
       {/* Global Modals */}
@@ -1298,10 +1322,10 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 relative z-10 flex flex-col">
+      <main className="flex-1 relative z-10 flex flex-col overflow-hidden">
           
           {screen === 'HOME' && (
-              <div className="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-8 overflow-y-auto">
                   {/* Left Column: Profile & Stats */}
                   <div className="space-y-6">
                       <div className="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden group">
@@ -1341,7 +1365,7 @@ export default function App() {
                   </div>
 
                   {/* Center/Right: Dashboard Tiles */}
-                  <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-4 pb-20">
                       <div onClick={() => setScreen('DECK')} className="bg-slate-800/50 hover:bg-slate-800 p-6 rounded-2xl border border-slate-700 cursor-pointer transition-all flex flex-col items-center justify-center gap-3 group">
                           <Layers size={40} className="text-blue-500 group-hover:scale-110 transition-transform"/>
                           <span className="font-bold text-lg">Mazo</span>
